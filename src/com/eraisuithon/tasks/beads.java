@@ -18,28 +18,49 @@ public class beads {
 		int numBeads = (int) st.nval;
 		st.nextToken();
 		char[] beads = st.sval.toLowerCase().toCharArray().clone();
-		int[] beadGrps = new int[numBeads];
+		int lenOfChain = 0;
 		
-		for (int i = 0; i < numBeads; i++) {
-			if (beads[i] != 'w') {
-				int j = i;
-				if (beads[i] == 'b') {
-					while (beads[j] == 'b' || beads[j++] == 'w') {
-						if (j == numBeads) {
-							j %= numBeads;
-						}
-					}
-					System.out.println("Index of start blue: " + i + "\nIndex of registred red: " + j + "\n");
+		for (int i = 0; i < beads.length; i++) {
+			int loopI = i;
+			boolean changed = false;
+			boolean stop = false;
+			int lenOfThisChain = 0;
+			String lastChar = "";
+			while (!stop) {
+				if (beads[loopI] == 'w') {
+					lenOfThisChain++;
 				} else {
-					while (beads[j] == 'r' || beads[j++] == 'w') {
-						if (j == numBeads) {
-							j %= numBeads;
+					if (lastChar.isEmpty()) {
+						lastChar = String.valueOf(beads[loopI]);
+						lenOfThisChain++;
+					} else {
+						if (lastChar.equals(String.valueOf(beads[loopI]))) {
+							lenOfThisChain++;
+						} else {
+							if (changed) {
+								stop = true;
+							} else {
+								lastChar = String.valueOf(beads[loopI]);
+								changed = true;
+								lenOfThisChain++;
+							}
 						}
 					}
-					System.out.println("Index of start red: " + String.valueOf(i) + "\nIndex of registred blue: " + j + "\n");
+				}
+				
+				loopI++;
+				loopI %= beads.length;
+				if (loopI == i) {
+					out.println(beads.length);
+					out.close();
+					System.exit(0);
 				}
 			}
+			if (lenOfThisChain > lenOfChain)
+				lenOfChain = lenOfThisChain;
 		}
+		
+		out.println(lenOfChain);
 		out.close();
 	}
 }
